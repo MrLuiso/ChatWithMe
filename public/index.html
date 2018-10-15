@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Super Secret Chat</title>
+    </head>
+    <body>
+        <input type="text" id="username" placeholder="Username"/>
+        <input type="text" id="input" placeholder="Message"/>
+        <button type="button" onclick="sendMessage()">Send</button>
+        <button onclick="del()">DROP *</button>
+        <div id="chat">
+        </div>
+    </body>
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBwynCC-ktO_wYjrugWnThnrSIAN0qB4jY",
+            authDomain: "chatwithme-c5501.firebaseapp.com",
+            databaseURL: "https://chatwithme-c5501.firebaseio.com",
+            projectId: "chatwithme-c5501",
+            storageBucket: "chatwithme-c5501.appspot.com",
+            messagingSenderId: "699551572677"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script>
+        function sendMessage(){
+            var message = document.getElementById('input').value;
+            var username = document.getElementById('username').value;
+            // Get a reference to the database service
+            var database = firebase.database();
+            database.ref().push({'message': message, 'user': username});
+            document.getElementById('input').value = '';
+        }
+        function del(){
+            firebase.database().ref().set(null);
+        }
+        var DATA = firebase.database().ref();
+        DATA.on('child_added', function(data) {
+            var p = document.createElement('p');
+            p.innerHTML = data.val().user + ": " + data.val().message;
+            document.getElementById('chat').appendChild(p);
+        });
+    </script>
+</html>
